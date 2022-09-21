@@ -25,10 +25,10 @@ npm install
 sequelize init
 ```
 
-### Create DB
+### Make Model and Migration
 
 ```sh
-sequelize db:create
+sequelize model:generate --name Users --attributes firstName:string,lastName:string,email:string,password:string
 ```
 
 ### Migrate Table
@@ -38,5 +38,7 @@ sequelize db:migrate
 ```
 
 ## Source
+- https://dev.to/richienabuk/setting-up-express-js-rest-api-postgres-and-sequelize-orm-with-es6-4m08
 - https://echobind.com/post/a-guide-for-restful-apis-with-node-sequelize-postgres
 - https://www.bezkoder.com/node-express-sequelize-postgresql/
+- https://medium.com/techno101/crud-using-node-js-express-and-sequelize-82c10ef3b346

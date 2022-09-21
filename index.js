@@ -9,15 +9,16 @@ const port = process.env.PORT || 1234
 
 app.use(cors())
 if(env!=="test"){
-    app.use(morgan('dev'));
+    app.use(morgan('development'));
 }
-
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 app.use(express.static('public'));
 
-const router = require('./routes/index');
-app.use('/api/v1',router);
+// router
+const UserRouter = require('./routes/User');
+app.use('/api/v1',[UserRouter]);
+// end router 
 
 app.get('/', (req, res) => res.status(200)
     .send({

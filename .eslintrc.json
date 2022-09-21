@@ -25,7 +25,6 @@
     "ignorePatterns":[
         "tests/",
         "migrations/",
-        "models",
-        "config"
+        "models"
     ]
 }

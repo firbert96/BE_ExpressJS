@@ -6,6 +6,9 @@ const {
   v4: uuidv4,
 } = require('uuid');
 const moment = require("moment");
+const jwt = require("jsonwebtoken");
+const dotenv = require('dotenv');
+dotenv.config();
 
 module.exports = {
   async add(req, res) {
@@ -21,7 +24,10 @@ module.exports = {
         password: passwordDigest,
       }
       const users = await Users.create(params);
-      return res.status(201).send(users)
+      const accessToken = jwt.sign({ id: users.id }, process.env.SECRET_KEY, {
+        expiresIn: 30*86400
+      });
+      return res.status(201).send({users,accessToken})
     }
     catch (err) {
       return res.status(422).json({error: err.message});
@@ -52,6 +58,27 @@ module.exports = {
     }
     catch(err) {
       return res.status(422).json({error: err.message});
+    }
+  },
+
+  async login (req,res){
+    const {email,password}=req.body;
+    try {
+      const login = await Users.findOne({email});
+      if(!login){
+          return res.status(400).send('Email not found');
+      }
+      const result = await Bcrypt.compareSync(password,login.password);
+      if(result){
+          const token = jwt.sign({ id: login.id }, process.env.SECRET_KEY);
+          return res.status(201).send(token)
+      }
+      else{
+        return res.status(400).send('Password isn\'t match');
+      }
+    }
+    catch (error) {
+      return res.status(422).send(error);
     }
   },
 

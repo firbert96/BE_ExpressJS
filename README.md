@@ -62,3 +62,4 @@ https://www.getpostman.com/collections/7dda5f907db54b608825
 - https://echobind.com/post/a-guide-for-restful-apis-with-node-sequelize-postgres
 - https://www.bezkoder.com/node-express-sequelize-postgresql/
 - https://medium.com/techno101/crud-using-node-js-express-and-sequelize-82c10ef3b346
+- https://paulreaney.medium.com/deploy-express-js-on-netlify-91cfaea39591

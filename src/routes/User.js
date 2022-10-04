@@ -10,4 +10,5 @@ router.get('/user/get/id', jwtMiddleware.verifyToken, userMiddleware.getById, us
 router.put('/user/update', jwtMiddleware.verifyToken, userMiddleware.update, userController.update);
 router.delete('/user/delete/soft', jwtMiddleware.verifyToken, userMiddleware.getById, userController.deleteSoft);
 router.delete('/user/delete/hard', jwtMiddleware.verifyToken, userMiddleware.getById, userController.deleteHard);
+router.post('/user/logout', jwtMiddleware.verifyToken, userController.logout);
 module.exports = router; 

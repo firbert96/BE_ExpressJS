@@ -24,10 +24,22 @@ module.exports = {
         password: passwordDigest,
       }
       const users = await Users.create(params);
-      const accessToken = jwt.sign({ id: users.id }, process.env.SECRET_KEY, {
+      const token = jwt.sign({ id: users.id }, process.env.SECRET_KEY, {
         expiresIn: 30*86400
       });
-      return res.status(201).send({users,accessToken})
+      await Users.update(
+        {
+          token,
+        },
+        {
+          where: {
+            id: {
+              [Op.eq]: users.id
+            }
+          }
+        }
+      );
+      return res.status(201).send({users,token})
     }
     catch (err) {
       return res.status(422).json({error: err.message});
@@ -71,7 +83,18 @@ module.exports = {
       const result = await Bcrypt.compareSync(password,login.password);
       if(result){
           const token = jwt.sign({ id: login.id }, process.env.SECRET_KEY);
-          return res.status(201).send(token)
+          await Users.update(
+          {
+            token,
+          },
+          {
+            where: {
+              id: {
+                [Op.eq]: login.id
+              }
+            }
+          });
+          return res.status(200).send(token)
       }
       else{
         return res.status(400).send('Password isn\'t match');
@@ -148,6 +171,27 @@ module.exports = {
         return res.status(200).json({msg: 'Successfully delete user'});
       }
       return res.status(404).send(users);
+    }
+    catch(err) {
+      return res.status(422).json({error: err.message});
+    }
+  },
+
+  async logout(req, res){
+    const {userId}=req;
+    try {
+      await Users.update(
+      {
+        token:null,
+      },
+      {
+        where: {
+          id: {
+            [Op.eq]: userId
+          }
+        }
+      });
+      return res.status(200).json({msg: 'Successfully logout user'});
     }
     catch(err) {
       return res.status(422).json({error: err.message});

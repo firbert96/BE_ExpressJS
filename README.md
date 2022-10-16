@@ -19,7 +19,7 @@ npm run dev
 ### Run Production
 
 ```sh
-npm install
+npm run deploy
 ```
 
 ### Init sequelize

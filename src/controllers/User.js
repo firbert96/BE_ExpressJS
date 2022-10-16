@@ -1,3 +1,4 @@
+const Response = require('../general/Response');
 const Model = require("../models");
 const {Users} = Model;
 const Bcrypt = require('bcryptjs');
@@ -13,6 +14,9 @@ dotenv.config();
 module.exports = {
   async add(req, res) {
     const {firstName,lastName,email,password}=req.body;
+    let status = false;
+    let message = 'Create user failed';
+    let param = null;
     try {
       const  salt = await Bcrypt.genSaltSync(10);
       const  passwordDigest = await Bcrypt.hashSync(password,salt);
@@ -39,25 +43,44 @@ module.exports = {
           }
         }
       );
-      return res.status(201).send({users,token})
+      users.token = token;
+      status = true;
+      message = 'Create user success';
+      param = {
+        users,
+      };
+      return res.status(201).json(Response.Format(status, message, param));
     }
     catch (err) {
-      return res.status(422).json({error: err.message});
+      return res.status(422).json(Response.Format(status, message, err.message));
     }
   },
 
   async getAll(req, res){
+    let status = false;
+    let message = 'Get all user failed';
+    let param = null;
     try {
-      const users = await Users.findAll();
-      return res.status(200).send(users)
+      const users = await Users.findAll({
+        where: { isDeleted: false }
+      });
+      status = true;
+      message = 'Get all user success';
+      param = {
+        users,
+      };
+      return res.status(200).json(Response.Format(status, message, param));
     }
     catch(err) {
-      return res.status(422).json({error: err.message});
+      return res.status(422).json(Response.Format(status, message, err.message));
     }
   },
 
   async getById(req, res){
     const {id}=req.query;
+    let status = false;
+    let message = 'Get user by id failed';
+    let param = null;
     try {
       const users = await Users.findAll({
         where: {
@@ -66,15 +89,23 @@ module.exports = {
           }
         }
       });
-      return res.status(200).send(users)
+      status = true;
+      message = 'Get user by id success';
+      param = {
+        users,
+      };
+      return res.status(200).json(Response.Format(status, message, param));
     }
     catch(err) {
-      return res.status(422).json({error: err.message});
+      return res.status(422).json(Response.Format(status, message, err.message));
     }
   },
 
   async login (req,res){
     const {email,password}=req.body;
+    let status = false;
+    let message = 'Login user failed';
+    let param = null;
     try {
       const login = await Users.findOne({email});
       if(!login){
@@ -94,19 +125,26 @@ module.exports = {
               }
             }
           });
-          return res.status(200).send(token)
+          status = true;
+          message = 'Login user success';
+          param = {
+            token,
+          };
+          return res.status(200).json(Response.Format(status, message, param));
       }
-      else{
-        return res.status(400).send('Password isn\'t match');
-      }
+
+      message= 'Password isn\'t match';
+      return res.status(400).json(Response.Format(status, message, message));
     }
-    catch (error) {
-      return res.status(422).send(error);
+    catch (err) {
+      return res.status(422).json(Response.Format(status, message, err.message));
     }
   },
 
   async update(req, res){
     const {id,firstName,lastName,email}=req.body;
+    let status = false;
+    let message = 'Update user failed';
     try {
       const users = await Users.update(
       {
@@ -123,17 +161,22 @@ module.exports = {
         }
       });
       if(users){
-        return res.status(200).json({msg: 'Successfully update user'});
+        status = true;
+        message = 'Update user success';
+        return res.status(200).json(Response.Format(status, message, message));
       }
-      return res.status(404).send(users);
+      message= 'Password isn\'t match';
+      return res.status(404).json(Response.Format(status, message, message));
     }
     catch(err) {
-      return res.status(422).json({error: err.message});
+      return res.status(422).json(Response.Format(status, message, err.message));
     }
   },
 
   async deleteSoft(req, res){
     const {id}=req.query;
+    let status = false;
+    let message = 'Delete user failed';
     try {
       const users = await Users.update(
       {
@@ -147,17 +190,21 @@ module.exports = {
         }
       });
       if(users){
-        return res.status(200).json({msg: 'Successfully delete user'});
+        status = true;
+        message = 'Delete user success';
+        return res.status(200).json(Response.Format(status, message, message));
       }
-      return res.status(404).send(users);
+      return res.status(404).json(Response.Format(status, message, message));
     }
     catch(err) {
-      return res.status(422).json({error: err.message});
+      return res.status(422).json(Response.Format(status, message, err.message));
     }
   },
 
   async deleteHard(req, res){
     const {id}=req.query;
+    let status = false;
+    let message = 'Delete user failed';
     try {
       const users = await Users.destroy(
       {
@@ -168,17 +215,21 @@ module.exports = {
         }
       });
       if(users){
-        return res.status(200).json({msg: 'Successfully delete user'});
+        status = true;
+        message = 'Delete user success';
+        return res.status(200).json(Response.Format(status, message, message));
       }
-      return res.status(404).send(users);
+      return res.status(404).json(Response.Format(status, message, message));
     }
     catch(err) {
-      return res.status(422).json({error: err.message});
+      return res.status(422).json(Response.Format(status, message, err.message));
     }
   },
 
   async logout(req, res){
     const {userId}=req;
+    let status = false;
+    let message = 'Logout user failed';
     try {
       await Users.update(
       {
@@ -191,10 +242,12 @@ module.exports = {
           }
         }
       });
-      return res.status(200).json({msg: 'Successfully logout user'});
+      status = true;
+      message = 'Logout user success';
+      return res.status(200).json(Response.Format(status, message, message));
     }
     catch(err) {
-      return res.status(422).json({error: err.message});
+      return res.status(422).json(Response.Format(status, message, err.message));
     }
   },
 };

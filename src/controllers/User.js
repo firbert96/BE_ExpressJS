@@ -250,4 +250,29 @@ module.exports = {
       return res.status(422).json(Response.Format(status, message, err.message));
     }
   },
+  
+  async me(req, res){
+    const {userId}=req;
+    let status = false;
+    let message = 'Get me failed';
+    let param = null;
+    try {
+      const users = await Users.findAll({
+        where: {
+          id: {
+            [Op.eq]: userId
+          }
+        }
+      });
+      status = true;
+      message = 'Get me success';
+      param = {
+        users,
+      };
+      return res.status(200).json(Response.Format(status, message, param));
+    }
+    catch(err) {
+      return res.status(422).json(Response.Format(status, message, err.message));
+    }
+  },
 };

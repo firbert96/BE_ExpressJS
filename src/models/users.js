@@ -16,12 +16,25 @@ module.exports = (sequelize, DataTypes) => {
   Users.init({
     firstName: DataTypes.STRING,
     lastName: DataTypes.STRING,
-    email: DataTypes.STRING,
+    email: {
+      type: DataTypes.STRING,
+      validate: {
+        isEmail:true
+      },
+      unique: {
+        args: true,
+        msg: 'Email address already in use!'
+      }
+    },
     password: DataTypes.STRING,
     token: DataTypes.STRING,
-    isDeleted: DataTypes.BOOLEAN,
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE,
+    deletedAt: DataTypes.DATE,
   }, {
     sequelize,
+    paranoid: true,
+    timestamps: true,
     modelName: 'Users',
   });
   return Users;

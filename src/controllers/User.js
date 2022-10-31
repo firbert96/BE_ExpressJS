@@ -62,7 +62,7 @@ module.exports = {
     let param = null;
     try {
       const users = await Users.findAll({
-        where: { isDeleted: false }
+        where: { deletedAt: null }
       });
       status = true;
       message = 'Get all user success';
@@ -173,35 +173,7 @@ module.exports = {
     }
   },
 
-  async deleteSoft(req, res){
-    const {id}=req.query;
-    let status = false;
-    let message = 'Delete user failed';
-    try {
-      const users = await Users.update(
-      {
-        isDeleted:true,
-      },
-      {
-        where: {
-          id: {
-            [Op.eq]: id
-          }
-        }
-      });
-      if(users){
-        status = true;
-        message = 'Delete user success';
-        return res.status(200).json(Response.Format(status, message, message));
-      }
-      return res.status(404).json(Response.Format(status, message, message));
-    }
-    catch(err) {
-      return res.status(422).json(Response.Format(status, message, err.message));
-    }
-  },
-
-  async deleteHard(req, res){
+  async delete(req, res){
     const {id}=req.query;
     let status = false;
     let message = 'Delete user failed';

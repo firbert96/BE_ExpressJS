@@ -6,7 +6,7 @@ module.exports = {
         const schema = Joi.object({
             firstName: Joi.string().required(),
             lastName: Joi.string(),
-            email: Joi.string().email().required(),
+            email: Joi.string().required(),
             password: Joi.string().min(6).required(),
         });
         VR.ValidateRequestBody(req, next, schema);
@@ -22,7 +22,7 @@ module.exports = {
             id: Joi.string().required(),
             firstName: Joi.string(),
             lastName: Joi.string(),
-            email: Joi.string().email(),
+            email: Joi.string(),
         });
         VR.ValidateRequestBody(req, next, schema);
     },

@@ -2,6 +2,9 @@ const dotenv = require('dotenv');
 dotenv.config();
 const express = require('express')
 const app = express();
+const bodyParser = require('body-parser')
+const jsonParser = bodyParser.json()
+const urlencodedParser = bodyParser.urlencoded({ extended: false })
 const morgan = require('morgan');
 const cors = require('cors')
 const env = process.env.NODE_ENV;
@@ -11,8 +14,8 @@ app.use(cors())
 if(env!=="test"){
     app.use(morgan('development'));
 }
-app.use(express.json());
-app.use(express.urlencoded({extended:false}));
+app.use(jsonParser);
+app.use(urlencodedParser);
 app.use(express.static('public'));
 
 // router

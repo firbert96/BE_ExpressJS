@@ -8,16 +8,16 @@
   },
   "test": {
     "username": "postgres",
-    "password": "pushmats1",
+    "password": "",
     "database": "database_test",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "production": {
     "username": "postgres",
-    "password": "pushmats1",
+    "password": "",
     "database": "database_production",
-    "host": "https://isnt-firbert96-awesome.netlify.app/",
+    "host": "127.0.0.1",
     "dialect": "postgres"
   }
 }

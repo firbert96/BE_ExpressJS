@@ -1,6 +1,13 @@
 # Project Description
 Boiler Plate for postgres+expressjs
 
+## Config DB
+- check config db postgres ./src/config/config.json
+
+## Make .env file
+- touch .env
+- copy .env.example to .env
+
 ## Project Setup
 
 ```sh
